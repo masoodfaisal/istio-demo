@@ -1,0 +1,35 @@
+---
+apiVersion: "security.istio.io/v1beta1"
+kind: "PeerAuthentication"
+metadata:
+  name: "be-app"
+  namespace: "istio-demo"
+spec:
+  selector:
+    matchLabels:
+      app: be-app     
+      version: v1               
+  mtls:
+    mode: STRICT
+
+
+
+---
+apiVersion: "security.istio.io/v1beta1"
+kind: "AuthorizationPolicy"
+metadata:
+  name: "allow-be-from-fe"
+  namespace: "istio-demo"
+spec:
+  selector:
+    matchLabels:
+      app: be-app     
+      version: v1               
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/istio-demo/sa/fe-app"]
+  - to:
+    - operation:
+        methods: ["GET"]      
+  action: DENY

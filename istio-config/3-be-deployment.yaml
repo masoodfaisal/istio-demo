@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: be-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-app
+  namespace: istio-demo
+  labels:
+    app: be-app
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be-app
+      version: v1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: 'true'
+      labels:
+        app: be-app
+        version: v1
+    spec:
+      serviceAccountName: be-app
+      containers:
+      - name: be-app
+        image: image-registry.openshift-image-registry.svc:5000/istio-demo/be-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-app
+  namespace: istio-demo
+spec:
+  selector:
+    app: be-app
+    version: v1
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
