@@ -85,7 +85,7 @@ The [commands.sh](commands.sh) file contains the commands used to build the demo
     curl -vvvk http://${ISTIO_GATEWAY}
     ```
 
-- Now change tge DENY to ALLOW in istio-config/7-auth-policy.yaml and apply it
+- Now change the value of the action field from DENY to ALLOW in istio-config/7-auth-policy.yaml and apply it to the cluster
     ```bash
     oc replace -f istio-config/7-auth-policy.yaml
     
